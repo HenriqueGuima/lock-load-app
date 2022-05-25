@@ -1,24 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import axios from "axios";
+import { useState } from "react";
 
 function App() {
+  const initState = {
+    name: "",
+    password: "",
+    description: "",
+  };
+  const [credential, setCredential] = useState(initState);
+  const { name, password, description } = credential;
+
+  const addCredential = async (e) => {
+    const response = await axios.post(
+      "http://localhost:3005/credentials",
+      credential
+    );
+    console.log(response);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addCredential(credential);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredential({ ...credential, [name]: value });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1>add new credential</h1>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            onChange={handleInputChange}
+            value={name}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="text"
+            name="password"
+            onChange={handleInputChange}
+            value={password}
+          />
+        </label>
+        <label>
+          Description:
+          <input
+            type="text"
+            name="description"
+            onChange={handleInputChange}
+            value={description}
+          />
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+    </>
   );
 }
 
